@@ -10,12 +10,24 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError(""); 
+
     try {
       const response = await loginUser(email, password);
-      localStorage.setItem("token", "sample_token");
-      navigate("/");
+      if (response && response.token) {
+        localStorage.setItem("token", response.token);
+        navigate("/");
+      } else {
+        setError("Invalid email or password");
+      }
     } catch (err) {
-      setError("Invalid email");
+      if (err.response && err.response.status === 404) {
+        setError("User does not exist.");
+      } else if (err.response && err.response.status === 401) {
+        setError("Invalid password.");
+      } else {
+        setError("An error occurred. Please try again.");
+      }
     }
   };
 
