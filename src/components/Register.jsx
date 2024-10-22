@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { registerUser } from '../../api'
+import { registerUser } from '../../api';
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -8,11 +8,21 @@ const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setError(''); 
+
     try {
-      await registerUser(email, password);
-      alert('Registration successful!');
+      const response = await registerUser(email, password);
+      if (response && response.success) {
+        alert('Registration successful!');
+      } else {
+        setError(response.message || 'Registration failed');
+      }
     } catch (err) {
-      setError('Registration failed');
+      if (err.response && err.response.status === 409) {
+        setError('User already exists with this email.');
+      } else {
+        setError('Registration failed. Please try again.');
+      }
     }
   };
 
