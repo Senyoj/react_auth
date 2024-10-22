@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../../api';
 
 const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate(); 
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    setError(''); 
+    setError('');
 
     try {
       const response = await registerUser(email, password);
-      if (response && response.success) {
+      if (response && response.data && response.data.success) {
         alert('Registration successful!');
+        navigate('/login'); 
       } else {
-        setError(response.message || 'Registration failed');
+        setError(response.data.message || 'Registration failed');
       }
     } catch (err) {
       if (err.response && err.response.status === 409) {
