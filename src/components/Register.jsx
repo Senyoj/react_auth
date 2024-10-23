@@ -5,24 +5,38 @@ import { registerUser } from "../../api";
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(false);
-
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+
   const handleRegister = async (e) => {
     e.preventDefault();
     setError("");
 
     try {
+      if (!email || !password) {
+        setError("Email and password are required.");
+        return;
+      }
+
       const response = await registerUser(email, password);
-      if (email && password) {
+      
+      if (response) {
+        console.log("Registration successful");
         navigate("/login");
-        console.log("Registrations successful");
       } else {
-        console.log("Registrations Failed!");
+        setError("Registration failed. Please try again.");
       }
     } catch (err) {
-      if (err.response && err.response.status === 409) {
-        setError("User already exists with this email.");
+      if (err.response) {
+        switch (err.response.status) {
+          case 409:
+            setError("An error occurred. Please try again");
+            break;
+          default:
+            setError("User already exists with this email. ");
+        }
+      } else {
+        setError("An error occurred. Please check your network.");
       }
     }
   };
@@ -30,9 +44,7 @@ const Register = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-center text-gray-800">
-          Register
-        </h2>
+        <h2 className="text-2xl font-bold text-center text-gray-800">Register</h2>
         {error && <div className="mb-4 text-center text-red-500">{error}</div>}
 
         <form onSubmit={handleRegister} className="mt-6">
