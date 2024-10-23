@@ -19,7 +19,7 @@ const Register = () => {
       }
 
       const response = await registerUser(email, password);
-      
+
       if (response) {
         console.log("Registration successful");
         navigate("/login");
@@ -44,7 +44,9 @@ const Register = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-center text-gray-800">Register</h2>
+        <h2 className="text-2xl font-bold text-center text-gray-800">
+          Register
+        </h2>
         {error && <div className="mb-4 text-center text-red-500">{error}</div>}
 
         <form onSubmit={handleRegister} className="mt-6">
@@ -94,7 +96,7 @@ const Register = () => {
 
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
-            Already have an account?{" "}
+            Already have an account?
             <a href="/login" className="text-blue-500 hover:underline">
               Login here
             </a>
