@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../../api";
+import { loginUser } from "../../api"; 
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -11,30 +11,28 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
-    // Clear any existing error and set loading state
     setError("");
     setLoading(true);
 
     try {
       const response = await loginUser(email, password);
-      
       if (response?.token) {
+        console.log({ email, password });
         localStorage.setItem("token", response.token);
-        navigate("/nomad");
-        console.log(response)
       } else {
-        setError("Invalid email or password.");
+        navigate("/nomad");
       }
     } catch (err) {
-      // Handle various error responses
       if (err.response) {
-        if (err.response.status === 404) {
-          setError("User does not exist.");
-        } else if (err.response.status === 401) {
-          setError("Invalid password.");
-        } else {
-          setError("An error occurred. Please try again.");
+        switch (err.response.status) {
+          case 404:
+            setError("User does not exist.");
+            break;
+          case 401:
+            setError("Incorrect email or password.");
+            break;
+          default:
+            setError("");
         }
       } else {
         setError("An error occurred. Please check your network.");
@@ -49,15 +47,14 @@ const Login = () => {
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center text-gray-800">Login</h2>
 
-        {error && (
-          <div className="mb-4 text-center text-red-500">
-            {error}
-          </div>
-        )}
+        {error && <div className="mb-4 text-center text-red-500">{error}</div>}
 
         <form onSubmit={handleLogin} className="mt-6">
           <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
               Email
             </label>
             <input
@@ -73,7 +70,10 @@ const Login = () => {
           </div>
 
           <div className="mb-6">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
               Password
             </label>
             <input

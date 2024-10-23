@@ -6,7 +6,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
-  
+
   const navigate = useNavigate();
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -16,9 +16,9 @@ const Register = () => {
       const response = await registerUser(email, password);
       if (email && password) {
         navigate("/login");
-        console.log("Registrations successful")
+        console.log("Registrations successful");
       } else {
-        console.log("Registrations Failed!")
+        console.log("Registrations Failed!");
         // setError(response.data.message || "Registration failed");
       }
     } catch (err) {
@@ -34,6 +34,7 @@ const Register = () => {
         <h2 className="text-2xl font-bold text-center text-gray-800">
           Register
         </h2>
+        {error && <div className="mb-4 text-center text-red-500">{error}</div>}
 
         <form onSubmit={handleRegister} className="mt-6">
           <div className="mb-4">
