@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../../api"; 
+import { loginUser } from "../../api";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -16,11 +16,11 @@ const Login = () => {
 
     try {
       const response = await loginUser(email, password);
-      if (response?.token) {
-        console.log({ email, password });
-        localStorage.setItem("token", response.token);
-      } else {
+      
+      if (response) {
         navigate("/nomad");
+      } else {
+        setError("Login failed. Please try again.");
       }
     } catch (err) {
       if (err.response) {
@@ -32,7 +32,7 @@ const Login = () => {
             setError("Incorrect email or password.");
             break;
           default:
-            setError("");
+            setError("Incorrect email or password");
         }
       } else {
         setError("An error occurred. Please check your network.");

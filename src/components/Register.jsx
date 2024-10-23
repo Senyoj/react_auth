@@ -19,7 +19,6 @@ const Register = () => {
         console.log("Registrations successful");
       } else {
         console.log("Registrations Failed!");
-        // setError(response.data.message || "Registration failed");
       }
     } catch (err) {
       if (err.response && err.response.status === 409) {
