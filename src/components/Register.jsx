@@ -13,7 +13,7 @@ const Register = () => {
     setError("");
 
     try {
-      // const response = await registerUser(email, password);
+      const response = await registerUser(email, password);
       if (email && password) {
         navigate("/login");
         console.log("Registrations successful")
