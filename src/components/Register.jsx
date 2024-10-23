@@ -1,31 +1,29 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { registerUser } from '../../api';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { registerUser } from "../../api";
 
 const Register = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate(); 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     try {
       const response = await registerUser(email, password);
       if (response && response.data && response.data.success) {
-        alert('Registration successful!');
-        navigate('/login'); 
+        // Redirect to login without alert
+        navigate("/login");
       } else {
-        setError(response.data.message || 'Registration failed');
+        setError(response.data.message || "Registration failed");
       }
     } catch (err) {
       if (err.response && err.response.status === 409) {
-        setError('User already exists with this email.');
-      } else {
-        setError('Registration failed. Please try again.');
-      }
+        setError("User already exists with this email.");
+      } 
     }
   };
 
