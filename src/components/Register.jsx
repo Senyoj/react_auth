@@ -5,28 +5,25 @@ import { registerUser } from "../../api";
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(false);
+  
   const navigate = useNavigate();
-
   const handleRegister = async (e) => {
     e.preventDefault();
     setError("");
 
     try {
-      const response = await registerUser(email, password);
-      console.log("Registration Response:", response); // Log the response
-      
-      if (response && response.data && response.data.success) {
+      // const response = await registerUser(email, password);
+      if (email && password) {
         navigate("/login");
+        console.log("Registrations successful")
       } else {
-        setError(response.data.err || "Registration failed");
+        console.log("Registrations Failed!")
+        // setError(response.data.message || "Registration failed");
       }
     } catch (err) {
-      console.error("Registration Error:", err); // Log the error
       if (err.response && err.response.status === 409) {
         setError("User already exists with this email.");
-      } else {
-        setError("Registration failed. Please try again.");
       }
     }
   };
@@ -34,10 +31,9 @@ const Register = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-center text-gray-800">Register</h2>
-        {error && (
-          <p className="text-red-500 text-center mt-4">{error}</p>
-        )}
+        <h2 className="text-2xl font-bold text-center text-gray-800">
+          Register
+        </h2>
 
         <form onSubmit={handleRegister} className="mt-6">
           <div className="mb-4">
@@ -86,7 +82,7 @@ const Register = () => {
 
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
-            Already have an account?{' '}
+            Already have an account?{" "}
             <a href="/login" className="text-blue-500 hover:underline">
               Login here
             </a>

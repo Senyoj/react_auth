@@ -11,7 +11,7 @@ const axiosInstance = axios.create({
 
 // log in user
 export const loginUser = async (email, password) => {
-  return axiosInstance.post('/login', { email, password });
+  return axiosInstance.post('/auth/login', { email, password });
 };
 
 // register user

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../api";
 
-const Login = () => {
+  const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -41,7 +41,6 @@ const Login = () => {
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center text-gray-800">Login</h2>
 
-        {error && <p className="text-red-500 text-center mt-4">{error}</p>}
 
         <form onSubmit={handleLogin} className="mt-6">
           <div className="mb-4">

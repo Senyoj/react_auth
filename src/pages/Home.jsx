@@ -2,14 +2,12 @@ import React from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const Home = () => {
-  const navigate = useNavigate(); // Initialize the navigate function
+  const navigate = useNavigate();
 
-  // Function to handle navigation to the register page
   const handleRegister = () => {
     navigate("/register");
   };
 
-  // Function to handle navigation to the login page
   const handleLogin = () => {
     navigate("/login");
   };
