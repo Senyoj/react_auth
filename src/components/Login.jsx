@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../api";
 
-  const Login = () => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -11,28 +11,36 @@ import { loginUser } from "../../api";
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    // Clear any existing error and set loading state
     setError("");
     setLoading(true);
 
     try {
       const response = await loginUser(email, password);
-      if (response && response.token) {
+      
+      if (response?.token) {
         localStorage.setItem("token", response.token);
-        setLoading(false);
         navigate("/nomad");
+        console.log(response)
       } else {
-        setError("Invalid email or password");
-        setLoading(false);
+        setError("Invalid email or password.");
       }
     } catch (err) {
-      setLoading(false);
-      if (err.response && err.response.status === 404) {
-        setError("User does not exist.");
-      } else if (err.response && err.response.status === 401) {
-        setError("Invalid password.");
+      // Handle various error responses
+      if (err.response) {
+        if (err.response.status === 404) {
+          setError("User does not exist.");
+        } else if (err.response.status === 401) {
+          setError("Invalid password.");
+        } else {
+          setError("An error occurred. Please try again.");
+        }
       } else {
-        setError("An error occurred. Please try again.");
+        setError("An error occurred. Please check your network.");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -41,13 +49,15 @@ import { loginUser } from "../../api";
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center text-gray-800">Login</h2>
 
+        {error && (
+          <div className="mb-4 text-center text-red-500">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleLogin} className="mt-6">
           <div className="mb-4">
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
               Email
             </label>
             <input
@@ -58,14 +68,12 @@ import { loginUser } from "../../api";
               onChange={(e) => setEmail(e.target.value)}
               className="w-full mt-2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
               required
+              disabled={loading}
             />
           </div>
 
           <div className="mb-6">
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
               Password
             </label>
             <input
@@ -76,12 +84,13 @@ import { loginUser } from "../../api";
               onChange={(e) => setPassword(e.target.value)}
               className="w-full mt-2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
               required
+              disabled={loading}
             />
           </div>
 
           <button
             type="submit"
-            className={`w-full px-4 py-2 text-white bg-gray-500 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600 ${
+            className={`w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 transition-all duration-150 ease-in-out ${
               loading ? "opacity-50 cursor-not-allowed" : ""
             }`}
             disabled={loading}
@@ -93,7 +102,7 @@ import { loginUser } from "../../api";
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
             Don't have an account?{" "}
-            <a href="/register" className="text-gray-500 hover:underline">
+            <a href="/register" className="text-blue-500 hover:underline">
               Register
             </a>
           </p>
