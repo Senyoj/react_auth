@@ -6,21 +6,26 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError(""); 
+    setError("");
+    setLoading(true);
 
     try {
       const response = await loginUser(email, password);
       if (response && response.token) {
         localStorage.setItem("token", response.token);
-        navigate("/");
+        setLoading(false);
+        navigate("/nomad");
       } else {
         setError("Invalid email or password");
+        setLoading(false);
       }
     } catch (err) {
+      setLoading(false);
       if (err.response && err.response.status === 404) {
         setError("User does not exist.");
       } else if (err.response && err.response.status === 401) {
@@ -35,6 +40,7 @@ const Login = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center text-gray-800">Login</h2>
+
         {error && <p className="text-red-500 text-center mt-4">{error}</p>}
 
         <form onSubmit={handleLogin} className="mt-6">
@@ -76,9 +82,12 @@ const Login = () => {
 
           <button
             type="submit"
-            className="w-full px-4 py-2 text-white bg-gray-500 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600"
+            className={`w-full px-4 py-2 text-white bg-gray-500 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600 ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            disabled={loading}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 

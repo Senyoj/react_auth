@@ -14,15 +14,20 @@ const Register = () => {
 
     try {
       const response = await registerUser(email, password);
+      console.log("Registration Response:", response); // Log the response
+      
       if (response && response.data && response.data.success) {
         navigate("/login");
       } else {
-        setError(response.data.message || "Registration failed");
+        setError(response.data.err || "Registration failed");
       }
     } catch (err) {
+      console.error("Registration Error:", err); // Log the error
       if (err.response && err.response.status === 409) {
         setError("User already exists with this email.");
-      } 
+      } else {
+        setError("Registration failed. Please try again.");
+      }
     }
   };
 
