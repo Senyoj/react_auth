@@ -15,7 +15,6 @@ const Register = () => {
     try {
       const response = await registerUser(email, password);
       if (response && response.data && response.data.success) {
-        // Redirect to login without alert
         navigate("/login");
       } else {
         setError(response.data.message || "Registration failed");
