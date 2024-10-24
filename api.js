@@ -32,7 +32,18 @@ export const loginUser = async (email, password) => {
     throw error;
   }
 };
+
 // register user
 export const registerUser = async (email, password) => {
   return axiosInstance.post("/auth/register", { email, password });
+};
+
+export const fetchNodeId = async () => {
+  try {
+    const response = await axiosInstance.post("/node/generate-id");
+    return response.data.nodeId; 
+  } catch (error) {
+    console.error("Error fetching node ID:", error);
+    throw error;
+  }
 };
